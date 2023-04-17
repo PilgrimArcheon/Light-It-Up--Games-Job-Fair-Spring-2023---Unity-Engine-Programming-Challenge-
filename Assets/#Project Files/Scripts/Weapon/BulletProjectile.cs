@@ -34,15 +34,15 @@ public class BulletProjectile : MonoBehaviour
         transform.Rotate(0, 0, rotateAmount, Space.Self);
     }
 
-    private void OnTriggerEnter(Collider other) 
+    private void OnCollisionEnter(Collision other) 
     {
-        if(other.CompareTag("Enemy"))
+        if(other.gameObject.CompareTag("Enemy"))
         {
-            other.GetComponent<EnemyAI>().TakeDamage(10);
+            other.gameObject.GetComponent<EnemyAI>().TakeDamage(10);
         }
-        else if(other.CompareTag("Player"))
+        else if(other.gameObject.CompareTag("Player"))
         {
-            other.GetComponent<PlayerStats>().TakeDamage(10);
+            other.gameObject.GetComponent<PlayerStats>().TakeDamage(10);
         }
         Instantiate(hitEffect, transform.position, Quaternion.identity);
         sfx.PlayOneShot(hitSound);

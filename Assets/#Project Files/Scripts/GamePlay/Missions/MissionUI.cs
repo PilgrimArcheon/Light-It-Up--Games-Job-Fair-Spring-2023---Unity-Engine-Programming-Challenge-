@@ -5,25 +5,25 @@ using UnityEngine.UI;
 
 public class MissionUI : MonoBehaviour
 {
-    GameObject missionUI;
-    GameObject completeMissionUI;
-    public MissionState missionState;
-    public string missionInfo;
-    public bool isCompleted;
-    public int completedMissionId;
-    public bool gameComplete;
-    public bool onInput;
+    GameObject missionUI;//missionUI GameObject
+    GameObject completeMissionUI;//completeMission 
+    public MissionState missionState;//Mission State
+    public string missionInfo;//Mission Details
+    public bool isCompleted;//Check if the mission is Complete
+    public int completedMissionId;//Mission ID
+    public bool gameComplete;//Is the Game Done...
+    public bool onInput;//Is the Mission Ended or started on Input??
     
-    Transform missionUIHolder;
-
+    Transform missionUIHolder;//Get the MissionUI Holder Trans
     void Start()
     {
-        missionUIHolder = GameObject.Find("MissionUI").transform;
-        missionUI = missionUIHolder.GetChild(1).gameObject;
-        completeMissionUI = missionUIHolder.GetChild(0).gameObject;
+        //Get all References and variables
+        missionUIHolder = GameObject.Find("MissionUI").transform;//Assign MissionUI holder
+        missionUI = missionUIHolder.GetChild(1).GetChild(0).gameObject;//assign mission UI
+        completeMissionUI = missionUIHolder.GetChild(0).GetChild(0).gameObject;//assign mission complete UI
     }
 
-    public void ShowUI()
+    public void ShowUI()//Check all necessarry variables and Show UI GO
     {
         if(gameComplete)
         {
@@ -34,12 +34,12 @@ public class MissionUI : MonoBehaviour
         if(missionUI == null)
             return;
         missionUI.SetActive(true);
-        missionUI.GetComponent<Text>().text = missionInfo;
+        missionUI.GetComponent<Text>().text = missionInfo;//Update MissionUI Text 
         MissionsManager.Instance.GetMissionSound();
         gameObject.SetActive(false);     
     }
 
-    public void MissionComplete()
+    public void MissionComplete()//Mission Complete
     {
         isCompleted = true;
         MissionsManager.Instance.GetActiveMission(completedMissionId);
@@ -51,31 +51,31 @@ public class MissionUI : MonoBehaviour
             GameComplete();    
     }
 
-    public void Done()
+    public void Done()//Done with Mission
     {
         completeMissionUI.SetActive(false);
     }
 
-    void OnTriggerStay(Collider other) 
+    void OnTriggerStay(Collider other)
     {
         if(onInput)
             return;
-        if(other.gameObject.tag == "Player")
+        if(other.gameObject.tag == "Player")//Confirm the Player Tag...
         {
-            if(missionState != MissionState.CompleteMission)
-                ShowUI();
+            if(missionState != MissionState.CompleteMission)//Check if the MissionState is "Complete"
+                ShowUI();//ShowUI...
             else
-                MissionComplete();
+                MissionComplete();//MissionComplete...
         }
     }
 
     //For Demo Build...//
     public void GameComplete()
     {
-        Invoke("Completed", 3f);
+        Invoke("Completed", 3f);// Call Complete Game In in 3 seconds
     }
 
-    void Completed()
+    void Completed()//Complete Mission
     {
         MissionComplete();
         missionUI.SetActive(false);
@@ -84,7 +84,7 @@ public class MissionUI : MonoBehaviour
     }
 }
 
-public enum MissionState
+public enum MissionState //MissionStates (DoMission, CompleteMission)
 {
     DoMission,
     CompleteMission

@@ -62,6 +62,7 @@ public class PlayerController : MonoBehaviour
     private CharacterController _controller;
     private PlayerStats playerStats;
     private PlayerInput _input;
+    public CompassBar _compassBar;
     private GameObject _mainCamera;
     private const float _threshold = 0.01f;
 
@@ -84,6 +85,7 @@ public class PlayerController : MonoBehaviour
         _hasAnimator = TryGetComponent(out _animator);
         _controller = GetComponent<CharacterController>();
         _input = GetComponent<PlayerInput>();
+        _compassBar = GetComponentInChildren<CompassBar>();
         playerStats = GetComponent<PlayerStats>();
 
         AssignAnimationIDs();
@@ -98,16 +100,16 @@ public class PlayerController : MonoBehaviour
         if(_isInteracting)
             return;
 
-        _hasAnimator = TryGetComponent(out _animator);
+        _hasAnimator = TryGetComponent(out _animator);//Get the animator Controller and comfirm there is an ani,ator
         
-        JumpAndGravity();
-        GroundedCheck();
-        Move();
+        JumpAndGravity();//Check Jump and Falls
+        GroundedCheck();//Check when Player is Grounded
+        Move();// Check for Player Movement
     }
 
     private void LateUpdate()
     {
-        CameraRotation();
+        CameraRotation();//Control Player Rotation...
     }
 
     private void AssignAnimationIDs()
@@ -385,7 +387,7 @@ public class PlayerController : MonoBehaviour
 
     public void DeathScreen()
     {
-        MenuManager.Instance.Pause();
+        MenuManager.Instance.Pause();//Show Death Screen On DEATH
     }
 
     public void TakeDamage()//Make Player Take Damage
