@@ -7,5 +7,5 @@ using UnityEngine;
 [System.Serializable]
 public class Conversation : ScriptableObject
 {
-	public Sentence[] sentences;
+	public Sentence[] sentences;//Array of Sentences in the Conversation
 }
