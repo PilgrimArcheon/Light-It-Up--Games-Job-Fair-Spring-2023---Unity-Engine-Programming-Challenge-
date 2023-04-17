@@ -1,0 +1,23 @@
+/Assembly-CSharp.csproj
+/Library
+/Logs
+/NavMeshComponents.csproj
+/NavMeshComponentsEditor.csproj
+/NavMeshComponentsExamples.csproj
+/NavMeshComponentsExamplesEditor.csproj
+/NavMeshComponentsTestsEditmode.csproj
+/NavMeshComponentsTestsPlaymode.csproj
+/obj
+/Packages
+/PhotonChat.csproj
+/PhotonRealtime.csproj
+/PhotonUnityNetworking.csproj
+/PhotonUnityNetworking.Editor.csproj
+/PhotonUnityNetworking.Utilities.csproj
+/PhotonUnityNetworking.Utilities.Culling.Editor.csproj
+/PhotonUnityNetworking.Utilities.PhotonPlayer.Editor.csproj
+/PhotonWebSocket.csproj
+/ProjectSettings
+/Switch On - (Games Job Fair Spring 2023 - Unity Engine Programming Challenge).sln
+/Temp
+/UserSettings
