@@ -6,7 +6,8 @@ using UnityEngine.EventSystems;
 public class SelectedUIComp : MonoBehaviour
 {
 	public GameObject ui_GO;//Object In Scene to Highlight
-	EventSystem eventSystem;//Event Systme
+	EventSystem eventSystem;//Event System
+	
 	void OnEnable()
 	{
 		eventSystem = EventSystem.current;//Reference event system

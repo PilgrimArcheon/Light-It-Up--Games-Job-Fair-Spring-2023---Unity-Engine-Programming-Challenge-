@@ -42,6 +42,7 @@ public class CompassBar : MonoBehaviour
 				scale = 1f - ((dst - 10) / (maxDistance));
 
 				_itemMarker.image.rectTransform.localScale = Vector3.one * scale;
+				_itemMarker.image.color = Color.green;
 				_itemMarker.image.color = new Color(_itemMarker.image.color.r, _itemMarker.image.color.g, _itemMarker.image.color.b, 1 * scale);
 			}
 			else 

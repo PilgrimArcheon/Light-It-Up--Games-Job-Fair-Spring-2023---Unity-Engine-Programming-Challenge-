@@ -105,6 +105,8 @@ public class PlayerController : MonoBehaviour
         JumpAndGravity();//Check Jump and Falls
         GroundedCheck();//Check when Player is Grounded
         Move();// Check for Player Movement
+
+        if(transform.position.y < -25f) playerStats.TakeDamage(5f);//When Player falls off World, reduce health until player dies...
     }
 
     private void LateUpdate()
@@ -251,6 +253,7 @@ public class PlayerController : MonoBehaviour
             // Jump
             if (_input.jump && _jumpTimeoutDelta <= 0.0f)
             {
+                playerStats.energy -= 5f;//Consume Player Energy
                 // the square root of H * -2 * G = how much velocity needed to reach desired height
                 _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
                 
@@ -271,7 +274,6 @@ public class PlayerController : MonoBehaviour
         {
             // reset the jump timeout timer
             _jumpTimeoutDelta = JumpTimeout;
-            playerStats.energy -= 10f * Time.deltaTime;//Consume Player Energy
             // fall timeout
             if (_fallTimeoutDelta >= 0.0f)
             {

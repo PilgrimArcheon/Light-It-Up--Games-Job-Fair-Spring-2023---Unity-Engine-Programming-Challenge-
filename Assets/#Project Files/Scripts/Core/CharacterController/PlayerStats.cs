@@ -44,11 +44,10 @@ public class PlayerStats : MonoBehaviour
         {
             health -= damage;
             //End Game
-            if(health <= 0){
-                isDead = true;
-            }
-            else
+            if(health <= 0)
             {
+                isDead = true;
+                FindObjectOfType<PlayerController>().Die();
             }
         }
     }
