@@ -62,7 +62,7 @@ public class FirstPersonShooterController : MonoBehaviour
             hitTransform = raycastHit.transform;//same with hitTransform
         }
 
-        if (playerInput.aim)//Get aim input and...
+        if (playerInput.aim && weaponEquiped)//Get aim input and...
         {
             aimVirtualCamera.gameObject.SetActive(true);//Set aimCamera on
             playerController.SetSensitivity(aimSensitivity);//set aim sensitivity
