@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Cinemachine;
 
 public class FirstPersonShooterController : MonoBehaviour
@@ -9,12 +10,15 @@ public class FirstPersonShooterController : MonoBehaviour
     [SerializeField] private float normalSensitivity;//Normal Move Sensitivity Value
     [SerializeField] private float aimSensitivity;//Aim Sensitivity Value
     [SerializeField] private LayerMask aimColliderLayerMask = new LayerMask();//aimColliderMask
+    [SerializeField] private LayerMask enemyMask;//Enemy Layer Mask
     [SerializeField] private Transform debugTransform;//
     [SerializeField] private Transform pfBulletProjectile;//Bullet 
     [SerializeField] private Transform spawnBulletPosition;//Bullet Spawn Point
     [SerializeField] private float shootTime;//Set Time for every shot
     private float timeBtwShots;//Time between each actual Shot
-
+    public Vector3 weaponOriginalPos;//Weapon Pos;
+    public Vector3 forwardOffset;//Recoil for Weapon
+    public float recoilOffSetValue = .5f;
     [SerializeField] private GameObject[] itemGameObjects;//Inventory Items for Player
     [SerializeField] private GameObject activeItemGameObject;//Active Invetory Item On Player
     [SerializeField] private GameObject Weapon;//Player's Weapon Game Object
@@ -44,9 +48,11 @@ public class FirstPersonShooterController : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         animator = GetComponent<Animator>();
         crossHair = GameObject.Find("Crosshair");
+        weaponOriginalPos = Weapon.transform.localPosition;
+        forwardOffset = new Vector3(weaponOriginalPos.x, weaponOriginalPos.y, weaponOriginalPos.z - recoilOffSetValue);
         hasRadioActiveGOIndicator = GameObject.Find("RadioActiveGOIndicator");
     }
-
+    
     private void Update()
     {
         if (playerController._isInteracting)//If player is interacting with UI, don't do anything Gameplay wise
@@ -60,6 +66,11 @@ public class FirstPersonShooterController : MonoBehaviour
             debugTransform.position = raycastHit.point;//Ray point in world
             mouseWorldPosition = raycastHit.point;//set MouseWorld Point to that position
             hitTransform = raycastHit.transform;//same with hitTransform
+        }
+
+        if (Physics.Raycast(ray, out RaycastHit _raycastHit, 999f, enemyMask))
+        {
+            crossHair.GetComponent<Image>().color = Color.red;
         }
 
         if (playerInput.aim && weaponEquiped)//Get aim input and...
@@ -164,12 +175,13 @@ public class FirstPersonShooterController : MonoBehaviour
         if (playerInput.shoot && weaponEquiped && !playerController._isInteracting && playerStats.ammo > 0)
         {
             ShootWeapon();// Projectile Shoot
-            //playerController.StopInteraction();
-            //playerInput.shoot = false;//Reset Shoot Input
+            crossHair.transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one * 2f, 5f * Time.deltaTime);
         }
         else
         {
             timeBtwShots = 0;//Reset Timebtw Shots
+            Weapon.transform.localPosition = weaponOriginalPos;
+            crossHair.transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, 5f * Time.deltaTime);
         }
     }
 
@@ -179,6 +191,8 @@ public class FirstPersonShooterController : MonoBehaviour
         {
             playerStats.ammo--;//Update Ammo Value
             Vector3 aimDir = (mouseWorldPosition - spawnBulletPosition.position).normalized;
+            //pushBack Recoil...
+            Weapon.transform.localPosition = forwardOffset;
             Instantiate(pfBulletProjectile, spawnBulletPosition.position, Quaternion.LookRotation(aimDir, Vector3.up));
             timeBtwShots = shootTime;
             playerController.AnimShoot();
@@ -187,6 +201,8 @@ public class FirstPersonShooterController : MonoBehaviour
         }
         else
         {
+            //Return From Recoils
+            Weapon.transform.localPosition = weaponOriginalPos;
             timeBtwShots -= Time.deltaTime;//Reduce Shoot Time
         }
     }
