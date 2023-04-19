@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour
     private float _fallTimeoutDelta;
 
     //Sounds
-    public AudioSource audioSource;
+    public AudioSource audioSource, footStepAudioSfx;
     public AudioClip DeathAudioClip, ShootAudioClip, DamageAudioClip, WeaponEquipedClip;
     public AudioClip LandingAudioClip;
     public AudioClip FootstepAudioClip;
@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour
         _hasAnimator = TryGetComponent(out _animator);
         _controller = GetComponent<CharacterController>();
         _input = GetComponent<PlayerInput>();
-        _compassBar = GetComponentInChildren<CompassBar>();
+
         playerStats = GetComponent<PlayerStats>();
 
         AssignAnimationIDs();
@@ -133,7 +133,7 @@ public class PlayerController : MonoBehaviour
         // set sphere position, with offset
         Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
         Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
-
+        //if(Grounded) OnLand();
         // update animator if using character
         if (_hasAnimator)
         {
@@ -171,10 +171,13 @@ public class PlayerController : MonoBehaviour
         // note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
         // if there is no input, set the target speed to 0
         if (_input.move == Vector2.zero) targetSpeed = 0.0f;
-
+        else 
+        {
+            if(targetSpeed == SprintSpeed) OnFootstep(1f);
+            else OnFootstep(.25f);
+        }
         // a reference to the players current horizontal velocity
         float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
-
         float speedOffset = 0.1f;
         float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f;
 
@@ -318,9 +321,10 @@ public class PlayerController : MonoBehaviour
         Sensitivity = newSensitivity;//Sensitivity changes on aim and out of aim Input
     }
 
-    public void OnFootstep()//Play Foot SoundFX
+    public void OnFootstep(float pitch)//Play Foot SoundFX
     {
-        audioSource.PlayOneShot(FootstepAudioClip);
+        footStepAudioSfx.pitch = pitch;
+        footStepAudioSfx.Play();
     }
 
     public void AnimShoot()//Play Shoot Animation and SoundFX
